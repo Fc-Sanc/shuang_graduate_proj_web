@@ -33,28 +33,28 @@ export default {
             type: String,
             default: ''
         },
-
         caption: {
             type: String,
             default: ''
         },
-
         link: {
             type: String,
             default: '#'
         },
-
         icon: {
             type: String,
             default: ''
         },
-        split: Boolean
+        split: {
+            type: Boolean,
+            default: false
+        }
     },
     inject: ['reload'],
     methods: {
         toNextPage(path) {
-            if (path.startsWith('http')) {
-                window.open(path,'_blank')
+            if (path.startsWith('http')) { // from outside
+                window.open(path, '_blank')
             } else {
                 this.$router.push({path})
                 this.reload()
