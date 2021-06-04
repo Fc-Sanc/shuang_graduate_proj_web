@@ -50,14 +50,14 @@ export default {
             default: false
         }
     },
-    inject: ['reload'],
+    // inject: ['reload'],
     methods: {
         toNextPage(path) {
             if (path.startsWith('http')) { // from outside
                 window.open(path, '_blank')
             } else {
                 this.$router.push({path})
-                this.reload()
+                // this.reload()
             }
         }
     }

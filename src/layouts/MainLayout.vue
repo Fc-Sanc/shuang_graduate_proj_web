@@ -1,16 +1,14 @@
 <template>
-    <q-layout view = "lHh Lpr lFf">
+    <q-layout view = "hHh Lpr lFf">
         <q-header elevated>
             <q-toolbar>
-                <q-btn
-                    ref = "menu_btn"
-                    flat dense round
-                    :icon = "icon"
-                    aria-label = "Menu"
-                    @click = "clickMenu"
-                />
+                <q-btn flat dense round
+                       ref = "menu_btn" aria-label = "Menu"
+                       :icon = "icon"
+                       @click = "clickMenu"/>
 
-                <q-separator dark vertical/>
+                <q-separator vertical
+                             class = "q-my-sm q-mx-md"/>
 
                 <q-toolbar-title class = "text-weight-bolder">
                     <LogoText/>
@@ -18,37 +16,8 @@
 
                 <q-space/>
 
-                <q-btn-group rounded>
-                    <q-btn
-                        ref = "btn_register"
-                        dense
-                        color = "white"
-                        class = "text-black q-pl-sm q-pr-sm"
-                        label = "Register"
-                        @click = "goRegister"/>
+                <UserInfoBar/>
 
-                    <q-btn
-                        ref = "btn_login"
-                        dense
-                        class = "q-pr-sm q-pl-sm"
-                        color = "secondary"
-                        label = "Login"/>
-                </q-btn-group>
-
-            </q-toolbar>
-            <q-toolbar>
-
-                <div class = "row">
-                    <q-btn
-                        ref = "btn_go_back"
-                        flat dense round
-                        icon = "arrow_back_ios_new"
-                        aira_label = "GoBack"
-                        @click = "goBack"/>
-                    <q-toolbar-title class = "text-weight-regular">
-                        返回
-                    </q-toolbar-title>
-                </div>
             </q-toolbar>
         </q-header>
 
@@ -56,32 +25,12 @@
             v-model = "leftDrawerOpen"
             show-if-above
             bordered
+            :mini = "miniState"
+            @mouseover = "miniState = false"
+            @mouseout = "miniState = true"
         >
-            <!--      content-class = "bg-grey-1"-->
             <q-list class = "text-bott">
-                <q-item-label
-                    header
-                    class = "text-grey-8"
-                >
-                    导航栏
-                </q-item-label>
-                <NaviLinkItem
-                    v-for = "link in naviLinkItems"
-                    :key = "link.id"
-                    v-bind = "link"
-                />
-                <q-item-label
-                    header
-                    class = "text-grey-8"
-                >
-                    设置
-                </q-item-label>
-                <q-toggle
-                    v-model = "nightModeOpen"
-                    color = "gray"
-                    label = "夜晚模式"
-                    @input = "nightModeToggle"
-                />
+                <NaviLinkItem v-for = "link in naviLinkItems" :key = "link.id" v-bind = "link"/>
             </q-list>
 
 
@@ -94,38 +43,54 @@
         <q-footer class = "reveal elevated">
             <q-toolbar class = "row justify-between">
                 <WeatherBar/>
+                <q-space/>
 
+                <q-btn flat no-caps
+                       icon = "coffee" label = "请作者喝杯咖啡"
+                       @click = "payDialog = true"/>
+
+                <q-space/>
                 <div class = "text-right" style = "padding-right: 10px">
                     Powered by Quasar v{{ $q.version }}, Shuang presented.
                 </div>
             </q-toolbar>
         </q-footer>
+
+        <q-dialog v-model = "payDialog">
+            <q-img :src = "alipay" style = "width:20vw"/>
+        </q-dialog>
     </q-layout>
 </template>
 
 <style>
 * {
-    font-family: 'Monaco', 'Sarasa UI SC', monospace;
+    font-family: 'Monaco', '-apple-system', monospace;
 }
 </style>
 
 <script>
 import NaviLinkItem from 'components/NavigatorLink.vue'
 import LogoText from "components/LogoText";
-import {Api, candidate_navi_items} from "src/router";
 import WeatherBar from "components/WeatherBar";
 import {Cookies} from 'quasar';
+import UserInfoBar from "components/UserInfoBar";
+import {api_third_party} from "assets/js/api";
+import {candidate_navi_items} from "assets/js/navi_items/candidate_navi_items";
+import {getImageUrl} from "assets/js/getImage";
 
 export default {
     name: 'MainLayout',
-    components: {WeatherBar, LogoText, NaviLinkItem},
+    components: {UserInfoBar, WeatherBar, LogoText, NaviLinkItem},
     data() {
         return {
+            miniState: true,
             leftDrawerOpen: false,
             icon: 'nightlight',
             naviLinkItems: candidate_navi_items,
             nightModeOpen: false,
-            weather: Api.api_third_party.weather
+            weather: api_third_party.weather,
+            alipay: getImageUrl('jpg/alipay.jpg'),
+            payDialog: false,
         }
     },
     methods: {
@@ -144,12 +109,12 @@ export default {
         goBack() {
             this.$router.back()
         },
-        goRegister() {
-            this.$router.push({path: '/login'})
-        }
     },
     mounted() {
         this.nightModeOpen = Cookies.get('dark_mode')
+        if (this.nightModeOpen === null) {
+            this.nightModeOpen = false
+        }
         this.$q.dark.set(this.nightModeOpen)
     }
 

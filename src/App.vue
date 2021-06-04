@@ -1,28 +1,30 @@
 <template>
-  <div id = "q-app">
-    <router-view v-if = "!routing"/>
-  </div>
+    <div id = "q-app">
+        <router-view/>
+    </div>
 </template>
 <script>
+
 export default {
-  name: 'App',
-  provide() {
-    return {
-      reload: this.reload
+    name: 'App',
+    provide() {
+        return {
+            reload: 'reload',
+        }
+    },
+    data() {
+        return {}
+    },
+    computed: {
+    },
+    methods: {
+        init() {
+            console.log('app.vue')
+
+        },
+    },
+    mounted() {
+        this.init()
     }
-  },
-  data() {
-    return {
-      routing: false
-    }
-  },
-  method: {
-    reload() {
-      this.routing = true
-      this.$nextTick(() => {
-        this.routing = false
-      })
-    }
-  }
 }
 </script>

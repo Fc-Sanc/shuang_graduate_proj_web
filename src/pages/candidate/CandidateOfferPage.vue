@@ -1,16 +1,12 @@
 <template>
-
+    <q-page>
+        offer
+    </q-page>
 </template>
 
 <script>
 export default {
-    name: "ChatterPage",
-    data() {
-
-    },
-    methods: {},
-    mounted() {
-    }
+    name: "CandidateOfferPage"
 }
 </script>
 
